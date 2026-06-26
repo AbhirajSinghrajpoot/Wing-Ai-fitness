@@ -61,6 +61,20 @@ export default function App() {
     initAuth();
   }, [isLoaded, isSignedIn, getToken]);
 
+  // Proactively refresh the Clerk token every 50 minutes to prevent stale-token 401 errors
+  useEffect(() => {
+    if (!isSignedIn) return;
+    const interval = setInterval(async () => {
+      try {
+        const t = await getToken();
+        if (t) setToken(t);
+      } catch (e) {
+        console.error("Token refresh failed", e);
+      }
+    }, 50 * 60 * 1000); // 50 minutes
+    return () => clearInterval(interval);
+  }, [isSignedIn, getToken]);
+
   // Fetch user profile only after token is safely fetched from Clerk
   useEffect(() => {
     if (token && isSignedIn) {
@@ -298,35 +312,47 @@ export default function App() {
 
             <Route path="/workout" element={
               <ProtectedRoute token={token}>
-                <Dashboard
-                  profile={profile!}
-                  healthStats={healthStats}
-                  mealPlan={mealPlan}
-                  workout={workout}
-                  discoverData={discoverData}
-                  onRefresh={() => fetchAllData(profile!)}
-                  onEditProfile={() => setIsEditingProfile(true)}
-                  loading={loading}
-                  activeTab="workout"
-                  token={token!}
-                />
+                {!profile ? (
+                  <div className="pt-6 flex justify-center items-center h-64">
+                    <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+                  </div>
+                ) : (
+                  <Dashboard
+                    profile={profile}
+                    healthStats={healthStats}
+                    mealPlan={mealPlan}
+                    workout={workout}
+                    discoverData={discoverData}
+                    onRefresh={() => fetchAllData(profile)}
+                    onEditProfile={() => setIsEditingProfile(true)}
+                    loading={loading}
+                    activeTab="workout"
+                    token={token!}
+                  />
+                )}
               </ProtectedRoute>
             } />
 
             <Route path="/nutrition" element={
               <ProtectedRoute token={token}>
-                <Dashboard
-                  profile={profile!}
-                  healthStats={healthStats}
-                  mealPlan={mealPlan}
-                  workout={workout}
-                  discoverData={discoverData}
-                  onRefresh={() => fetchAllData(profile!)}
-                  onEditProfile={() => setIsEditingProfile(true)}
-                  loading={loading}
-                  activeTab="nutrition"
-                  token={token!}
-                />
+                {!profile ? (
+                  <div className="pt-6 flex justify-center items-center h-64">
+                    <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+                  </div>
+                ) : (
+                  <Dashboard
+                    profile={profile}
+                    healthStats={healthStats}
+                    mealPlan={mealPlan}
+                    workout={workout}
+                    discoverData={discoverData}
+                    onRefresh={() => fetchAllData(profile)}
+                    onEditProfile={() => setIsEditingProfile(true)}
+                    loading={loading}
+                    activeTab="nutrition"
+                    token={token!}
+                  />
+                )}
               </ProtectedRoute>
             } />
 

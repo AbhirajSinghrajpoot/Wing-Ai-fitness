@@ -9,15 +9,23 @@ router.get('/profile', (req: any, res) => {
 
   try {
     const user = db.prepare(`
-      SELECT id, name, email, age, gender, height, weight, 
-             activity_level, goal, sleep_hours, dietary_restrictions, 
+      SELECT id, name, email, age, gender, height, weight,
+             activity_level, goal, sleep_hours, dietary_restrictions,
              is_verified, google_id, github_id, created_at
       FROM users WHERE id = ?
-    `).get(userId);
+    `).get(userId) as any;
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
-    res.json(user);
+    // Map DB snake_case columns → camelCase shape expected by the frontend UserProfile type
+    const profile = {
+      ...user,
+      activityLevel: user.activity_level,
+      goals: user.goal,                    // Frontend uses 'goals', DB stores as 'goal'
+      sleepHours: user.sleep_hours,
+      dietaryRestrictions: user.dietary_restrictions,
+    };
+    res.json(profile);
   } catch (error) {
     res.status(500).json({ error: "Failed to retrieve profile" });
   }
@@ -26,16 +34,20 @@ router.get('/profile', (req: any, res) => {
 // Update Profile
 router.post('/profile', (req: any, res) => {
   const userId = req.user.userId;
+  // Accept both 'goals' (frontend) and 'goal' (legacy) for backward compatibility
   const { age, gender, height, weight, activityLevel, goals, goal, sleepHours, dietaryRestrictions } = req.body;
+  const goalValue = goals ?? goal; // Prefer 'goals' from frontend
 
   try {
     const stmt = db.prepare(`
-      UPDATE users 
+      UPDATE users
       SET age = ?, gender = ?, height = ?, weight = ?, activity_level = ?, goal = ?, sleep_hours = ?, dietary_restrictions = ?
       WHERE id = ?
     `);
 
-    stmt.run(age, gender, height, weight, activityLevel, goals, sleepHours, dietaryRestrictions, userId);
+    // activityLevel (camelCase from frontend) maps to activity_level column
+    // goalValue uses 'goals' from frontend, stored as 'goal' in DB
+    stmt.run(age, gender, height, weight, activityLevel, goalValue, sleepHours, dietaryRestrictions, userId);
 
     res.json({ message: "Profile updated successfully" });
   } catch (error) {
