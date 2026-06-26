@@ -6,7 +6,7 @@
 ![SQLite](https://img.shields.io/badge/SQLite-07405E?style=for-the-badge&logo=sqlite&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
 
-Welcome to **ArogyaMitra**, your personal, intelligent health companion built to help you eat better, train smarter, and stay consistent. 
+Welcome to **Wing**, your personal, intelligent health companion built to help you eat better, train smarter, and stay consistent. 
 
 Instead of relying on generic templates, ArogyaMitra leverages Large Language Models (LLMs) under the hood to provide actionable, highly personalized fitness and nutrition advice that adapts to your specific goals, body metrics, and lifestyle.
 
