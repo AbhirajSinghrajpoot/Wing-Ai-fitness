@@ -187,7 +187,7 @@ async function startServer() {
   });
 
   app.listen(PORT, '0.0.0.0', () => {
-    console.log(`ArogyaMitra running on http://localhost:${PORT} [${process.env.NODE_ENV || 'development'}]`);
+    console.log(`Wing running on http://localhost:${PORT} [${process.env.NODE_ENV || 'development'}]`);
   });
 }
 

@@ -252,7 +252,7 @@ export default function App() {
 
   return (
     <BrowserRouter>
-      <div className="min-h-screen max-w-[430px] mx-auto bg-background-dark relative overflow-x-hidden no-scrollbar">
+      <div className="min-h-screen w-full bg-background-dark relative overflow-x-hidden no-scrollbar">
         <div className="absolute inset-0 z-0 opacity-40 pointer-events-none">
           <div className="absolute -top-40 -left-40 w-96 h-96 bg-slate-800 rounded-full mix-blend-screen filter blur-[100px]"></div>
           <div className="absolute top-1/3 -right-20 w-80 h-80 bg-primary/20 rounded-full mix-blend-screen filter blur-[80px]"></div>
@@ -405,12 +405,12 @@ const Navigation = ({ profile, isSignedIn }: { profile: any; isSignedIn: boolean
   if (!isSignedIn || !profile || location.pathname === '/login' || location.pathname === '/register') return null;
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 max-w-[430px] mx-auto z-50 px-6 pb-8 pt-4 bg-gradient-to-t from-background-dark via-background-dark/95 to-transparent">
+    <nav className="fixed bottom-0 left-0 right-0 w-full md:max-w-md mx-auto z-50 px-6 pb-8 pt-4 bg-gradient-to-t from-background-dark via-background-dark/95 to-transparent">
       <div className="bg-surface-dark/80 backdrop-blur-2xl border border-white/10 rounded-full p-2 flex items-center justify-between shadow-2xl">
         <button onClick={() => navigate('/dashboard')} className={`p-3 ${activeTab === 'dashboard' ? 'text-primary' : 'text-slate-500'}`}><Home className="w-6 h-6" /></button>
         <button onClick={() => navigate('/workout')} className={`p-3 ${activeTab === 'workout' ? 'text-primary' : 'text-slate-500'}`}><Activity className="w-6 h-6" /></button>
         <div className="relative -top-6">
-          <button onClick={() => navigate('/coach')} className={`w-14 h-14 rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(19,236,178,0.4)] transform active:scale-95 transition-transform ${activeTab === 'coach' ? 'bg-white text-background-dark' : 'bg-primary text-background-dark'}`}>
+          <button onClick={() => navigate('/coach')} className={`w-14 h-14 rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(255,255,255,0.3)] transform active:scale-95 transition-transform ${activeTab === 'coach' ? 'bg-white text-background-dark' : 'bg-primary text-background-dark'}`}>
             <MessageSquare className="w-8 h-8" />
           </button>
         </div>

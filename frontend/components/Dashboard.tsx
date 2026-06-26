@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Activity, Flame, Utensils, PlayCircle, Clock, ChevronRight, Info, Plus, Minus, Droplets, Calendar as CalendarIcon, CheckCircle2, User } from 'lucide-react';
+import { Activity, Flame, Utensils, PlayCircle, Clock, ChevronRight, Info, Plus, Minus, Droplets, Calendar as CalendarIcon, CheckCircle2, User, Feather } from 'lucide-react';
 import { motion } from 'motion/react';
+import { useUser } from '@clerk/clerk-react';
 import { UserProfile, MealPlan, Workout, Meal, HealthStats, DiscoverData } from '../types';
 import { GoogleCalendarButton } from './GoogleCalendarButton';
 import { WorkoutTimer } from './WorkoutTimer';
@@ -36,6 +37,8 @@ export const Dashboard: React.FC<DashboardProps> = ({
   activeTab,
   token
 }) => {
+  const { user } = useUser();
+  const displayName = user?.fullName || user?.firstName || user?.emailAddresses?.[0]?.emailAddress || 'User';
   const [time, setTime] = useState(new Date());
   const navigate = useNavigate();
   const [waterIntake, setWaterIntake] = useState(0);
@@ -65,11 +68,16 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
   const renderHeader = () => (
     <header className="flex items-center justify-between px-4 py-6">
-      <div>
-        <h1 className="text-2xl font-bold text-white tracking-tight">ArogyaMitra</h1>
-        <p className="text-slate-500 text-xs font-medium uppercase tracking-[0.2em]">
-          {activeTab === 'dashboard' ? 'Dashboard' : activeTab === 'workout' ? 'Training' : 'Nutrition'}
-        </p>
+      <div className="flex items-center gap-3">
+        <div className="w-10 h-10 rounded-xl bg-primary text-background-dark flex items-center justify-center shadow-[0_0_20px_rgba(255,255,255,0.2)]">
+          <Feather className="w-6 h-6" />
+        </div>
+        <div>
+          <h1 className="text-2xl font-bold text-white tracking-tight">Wing</h1>
+          <p className="text-slate-500 text-xs font-medium uppercase tracking-[0.2em]">
+            {activeTab === 'dashboard' ? 'Dashboard' : activeTab === 'workout' ? 'Training' : 'Nutrition'}
+          </p>
+        </div>
       </div>
       <button
         onClick={onEditProfile}
@@ -132,7 +140,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                   key={idx}
                   onClick={() => setSelectedDay(dateOffset)}
                   className={`flex flex-col items-center justify-center w-14 h-20 shrink-0 rounded-[1.2rem] transition-all border ${isSelected
-                    ? 'bg-primary text-background-dark border-primary shadow-[0_5px_15px_-5px_rgba(19,236,178,0.5)] scale-105'
+                    ? 'bg-primary text-background-dark border-primary shadow-[0_5px_15px_-5px_rgba(255,255,255,0.5)] scale-105'
                     : isToday
                       ? 'bg-primary/10 border-primary/30 text-white'
                       : 'bg-surface-dark border-white/5 text-slate-400 hover:bg-white/5 hover:border-white/20'
@@ -153,7 +161,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
           {selectedDay !== 0 ? (
             <div className="bg-surface-dark p-8 rounded-[2.5rem] border border-dashed border-white/10 flex flex-col items-center justify-center text-center gap-4 group hover:border-primary/30 transition-colors">
               <div className="w-20 h-20 rounded-2xl bg-primary/5 flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
-                <img src={calendarDropIcon} alt="Calendar" className="w-12 h-12 object-contain filter drop-shadow-[0_0_15px_rgba(19,236,178,0.3)]" />
+                <img src={calendarDropIcon} alt="Calendar" className="w-12 h-12 object-contain filter drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]" />
               </div>
               <div className="flex flex-col gap-1">
                 <h3 className="text-lg font-bold text-white">Future Schedule</h3>
@@ -217,10 +225,17 @@ export const Dashboard: React.FC<DashboardProps> = ({
                                 const u = new URL(ex.videoUrl);
                                 return u.searchParams.get('v') || u.pathname.split('/').pop() || '';
                               } catch { return ''; }
-                            })()}/hqdefault.jpg`}
+                            })()}/maxresdefault.jpg`}
                             alt={`${ex.name} tutorial`}
                             className="w-full h-full object-cover opacity-70 group-hover/vid:opacity-100 transition-all duration-500"
-                            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                            onError={(e) => { 
+                              const target = e.target as HTMLImageElement;
+                              if (target.src.includes('maxresdefault.jpg')) {
+                                target.src = target.src.replace('maxresdefault.jpg', 'hqdefault.jpg');
+                              } else {
+                                target.style.display = 'none'; 
+                              }
+                            }}
                           />
                           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                           <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
@@ -375,7 +390,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ type: 'spring', damping: 15 }}
-          className="relative z-10 w-52 h-52 rounded-full border-[6px] border-primary/10 flex flex-col items-center justify-center bg-surface-dark/40 backdrop-blur-3xl shadow-[0_0_60px_rgba(19,236,178,0.1)]"
+          className="relative z-10 w-52 h-52 rounded-full border-[6px] border-primary/10 flex flex-col items-center justify-center bg-surface-dark/40 backdrop-blur-3xl shadow-[0_0_60px_rgba(255,255,255,0.1)]"
         >
           <div className="absolute inset-0 rounded-full border border-white/5"></div>
           <span className="text-5xl font-bold text-primary tracking-tighter">{healthStats?.bmi || '--'}</span>
@@ -387,7 +402,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
       </section>
 
       {/* Time and Stats Grid */}
-      <section className="grid grid-cols-2 gap-4 px-4">
+      <section className="grid grid-cols-2 md:grid-cols-4 gap-4 px-4">
         <DigitalClock />
         <div className="bg-surface-dark p-6 rounded-[2rem] border border-white/5 flex flex-col gap-2 shadow-xl hover:border-primary/20 transition-colors group">
           <div className="flex items-center gap-2 text-primary">
@@ -405,8 +420,9 @@ export const Dashboard: React.FC<DashboardProps> = ({
         </div>
       </section>
 
-      {/* Video Suggestions System */}
-      <section className="px-4 flex flex-col gap-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+        {/* Video Suggestions System */}
+        <section className="px-4 flex flex-col gap-5">
         <div className="flex items-center justify-between px-1">
           <h3 className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500">Curated Discoveries</h3>
           <button onClick={() => navigate('/explore')} className="text-[10px] font-bold text-primary uppercase tracking-widest flex items-center gap-1 hover:gap-2 transition-all">
@@ -495,12 +511,13 @@ export const Dashboard: React.FC<DashboardProps> = ({
           </div>
         </div>
       </section>
+      </div>
 
       {/* Quick Summary Cards */}
-      <section className="px-4 flex flex-col gap-4">
+      <section className="px-4 flex flex-col md:flex-row gap-4">
         <div
           onClick={() => navigate('/workout')}
-          className="bg-surface-dark p-6 rounded-[2rem] border border-white/5 flex items-center justify-between hover:bg-white/[0.02] transition-all group cursor-pointer active:scale-[0.98]"
+          className="bg-surface-dark p-6 w-full rounded-[2rem] border border-white/5 flex items-center justify-between hover:bg-white/[0.02] transition-all group cursor-pointer active:scale-[0.98]"
         >
           <div className="flex items-center gap-5">
             <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center border border-primary/10 group-hover:scale-105 transition-transform">
@@ -518,7 +535,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
         <div
           onClick={() => navigate('/nutrition')}
-          className="bg-surface-dark p-6 rounded-[2rem] border border-white/5 flex items-center justify-between hover:bg-white/[0.02] transition-all group cursor-pointer active:scale-[0.98]"
+          className="bg-surface-dark p-6 w-full rounded-[2rem] border border-white/5 flex items-center justify-between hover:bg-white/[0.02] transition-all group cursor-pointer active:scale-[0.98]"
         >
           <div className="flex items-center gap-5">
             <div className="w-14 h-14 rounded-2xl bg-orange-500/10 flex items-center justify-center border border-orange-500/10 group-hover:scale-105 transition-transform">
@@ -535,11 +552,11 @@ export const Dashboard: React.FC<DashboardProps> = ({
         </div>
       </section>
 
-      {/* Developer Credit */}
+      {/* User Credit */}
       <footer className="px-4 py-12 flex flex-col items-center justify-center gap-3 opacity-30">
         <div className="h-[1px] w-16 bg-gradient-to-r from-transparent via-slate-700 to-transparent mb-2"></div>
-        <p className="text-[8px] uppercase tracking-[0.4em] font-bold text-slate-500">Developed & Crafted by</p>
-        <p className="text-[10px] font-bold text-primary tracking-[0.3em]">PRINCE KORI</p>
+        <p className="text-[8px] uppercase tracking-[0.4em] font-bold text-slate-500">Signed in as</p>
+        <p className="text-[10px] font-bold text-primary tracking-[0.3em]">{displayName.toUpperCase()}</p>
       </footer>
     </div>
   );

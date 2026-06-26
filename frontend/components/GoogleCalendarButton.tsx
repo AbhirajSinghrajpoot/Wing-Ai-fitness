@@ -72,7 +72,7 @@ export const GoogleCalendarButton: React.FC<GoogleCalendarButtonProps> = ({
       const { start, end } = getDates();
       const formatTime = (date: Date) => date.toISOString().replace(/-|:|\.\d\d\d/g, '');
 
-      let icsContent = "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//ArogyaMitra//EN\r\nBEGIN:VEVENT\r\n";
+      let icsContent = "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Wing//EN\r\nBEGIN:VEVENT\r\n";
       icsContent += `DTSTART:${formatTime(start)}\r\n`;
       icsContent += `DTEND:${formatTime(end)}\r\n`;
       icsContent += `SUMMARY:${summary}\r\n`;

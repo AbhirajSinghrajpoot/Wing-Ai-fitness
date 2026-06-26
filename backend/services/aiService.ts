@@ -187,11 +187,11 @@ export const getAICoachResponse = async (params: {
     historyText = "\n\n--- Recent Chat History ---\n";
     for (const h of recentHistory) {
       if (!h.text) continue;
-      historyText += `${h.role === 'model' ? 'ArogyaMitra (You)' : 'User'}: ${h.text}\n`;
+      historyText += `${h.role === 'model' ? 'Wing (You)' : 'User'}: ${h.text}\n`;
     }
   }
 
-  const systemPrompt = `You are ArogyaMitra, an AI health coach. 
+  const systemPrompt = `You are Wing, an AI health coach. 
   You were developed and crafted by PRINCE KORI. 
   If anyone asks who created you or who is the developer, you must proudly state that you were developed by PRINCE KORI.
   User Profile: BMI ${params.stats.bmi} (${params.stats.category}), Goal: ${params.profile.goals}, Sleep: ${params.profile.sleepHours}h.
@@ -220,9 +220,9 @@ export const getAICoachResponse = async (params: {
     try {
       let conversation = systemPrompt + "\\n\\n--- Chat History ---\\n";
       for (const h of params.history) {
-        conversation += `\${h.role === 'model' ? 'Coach' : 'User'}: \${h.text}\\n`;
+        conversation += `${h.role === 'model' ? 'Coach' : 'User'}: ${h.text}\\n`;
       }
-      conversation += `User: \${params.message}`;
+      conversation += `User: ${params.message}`;
 
       const response = await gemini.models.generateContent({
         model: 'gemini-2.5-flash',

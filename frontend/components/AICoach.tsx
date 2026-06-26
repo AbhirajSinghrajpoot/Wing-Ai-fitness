@@ -3,6 +3,7 @@ import { UserProfile, ChatMessage, HealthStats } from '../types';
 import { Send, User, Bot, Mic, MicOff, Volume2, Square } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { getAICoachResponse } from '../services/aiService';
+import { useUser } from '@clerk/clerk-react';
 
 interface AICoachProps {
   profile: UserProfile;
@@ -11,8 +12,10 @@ interface AICoachProps {
 }
 
 export const AICoach: React.FC<AICoachProps> = ({ profile, stats, token }) => {
+  const { user } = useUser();
+  const displayName = user?.fullName || user?.firstName || user?.emailAddresses?.[0]?.emailAddress || 'You';
   const [messages, setMessages] = useState<ChatMessage[]>([
-    { role: 'model', text: "Hello! I'm ArogyaMitra, your AI health coach. How can I help you reach your goals today?" }
+    { role: 'model', text: "Hello! I'm Wing, your AI health coach. How can I help you reach your goals today?" }
   ]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -165,7 +168,7 @@ export const AICoach: React.FC<AICoachProps> = ({ profile, stats, token }) => {
                 <div className={`flex flex-col gap-2 ${msg.role === 'user' ? 'items-end' : 'items-start'}`}>
                   <div className={`p-5 rounded-[2rem] text-[15px] leading-relaxed relative group
                     ${msg.role === 'user'
-                      ? 'bg-primary text-background-dark font-medium rounded-tr-md shadow-[0_10px_40px_-10px_rgba(19,236,178,0.5)]'
+                      ? 'bg-primary text-background-dark font-medium rounded-tr-md shadow-[0_10px_40px_-10px_rgba(255,255,255,0.5)]'
                       : 'bg-surface-dark border border-white/5 text-slate-200 rounded-tl-md shadow-2xl'}`}>
                     {msg.text}
                   </div>
@@ -214,7 +217,7 @@ export const AICoach: React.FC<AICoachProps> = ({ profile, stats, token }) => {
       <div className="pb-6 pt-4 shrink-0 relative">
         <div className={`absolute inset-0 bg-primary/20 blur-3xl rounded-full transition-opacity duration-500 ${isListening ? 'opacity-100' : 'opacity-0'}`}></div>
         <div className={`relative bg-surface-dark border transition-all duration-300 rounded-[2rem] p-2 flex items-center pl-4
-          ${isListening ? 'border-primary shadow-[0_0_30px_rgba(19,236,178,0.2)]' : 'border-white/10 shadow-xl'}`}>
+          ${isListening ? 'border-primary shadow-[0_0_30px_rgba(255,255,255,0.2)]' : 'border-white/10 shadow-xl'}`}>
           <input
             type="text"
             value={input}
@@ -243,9 +246,9 @@ export const AICoach: React.FC<AICoachProps> = ({ profile, stats, token }) => {
         </div>
 
         {/* Developer Credit */}
-        <div className="mt-5 flex flex-col items-center justify-center gap-1 opacity-20">
-          <p className="text-[8px] uppercase tracking-[0.2em] font-bold text-slate-500">Developed & Crafted by</p>
-          <p className="text-[10px] font-bold text-primary tracking-widest">PRINCE KORI</p>
+        <div className="mt-5 flex flex-col items-center justify-center gap-1 opacity-30">
+          <p className="text-[8px] uppercase tracking-[0.2em] font-bold text-slate-500">Signed in as</p>
+          <p className="text-[10px] font-bold text-primary tracking-widest">{displayName.toUpperCase()}</p>
         </div>
       </div>
     </div>
