@@ -1,4 +1,4 @@
-# 🧘‍♂️ ArogyaMitra | AI Health & Fitness Companion
+# 🧘‍♂️ Wing | AI Health & Fitness Companion
 
 ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
 ![React](https://img.shields.io/badge/React_19-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
